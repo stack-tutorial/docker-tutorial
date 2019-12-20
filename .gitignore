@@ -1,0 +1,4 @@
+*.pem
+*.req
+*.crt
+*.key

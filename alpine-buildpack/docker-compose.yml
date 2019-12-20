@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  alpine-buildpack:
+    container_name: alpine-buildpack
+    hostname: alpine-buildpack
+    build: $PWD
+    image: alpine-buildpack:dev
+    restart: always
+    tty: true
+    volumes:
+      - $HOME/gocode/src:/root/go/src

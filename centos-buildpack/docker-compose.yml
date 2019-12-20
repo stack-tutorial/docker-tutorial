@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  centos-buildpack:
+    container_name: centos-buildpack
+    hostname: centos-buildpack
+    build: $PWD
+    image: centos-buildpack:dev
+    restart: always
+    tty: true
+    volumes:
+      - $HOME/code/:/root/code/
