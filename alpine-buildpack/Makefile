@@ -9,7 +9,7 @@ upgrade:
 
 .PHONY: build
 build:
-	docker build -t $(docker_name):$(docker_tag) .
+	docker-compose build $(docker_name)
 
 .PHONY: run
 run:
@@ -17,4 +17,8 @@ run:
 
 .PHONY: exec
 exec:
-	docker exec -it $(docker_container) /usr/bin/fish
+	docker-compose exec -it $(docker_container)
+
+.PHONY: exec-now
+exec-now:
+	docker-compose run --rm $(docker_container)

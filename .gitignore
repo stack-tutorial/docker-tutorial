@@ -2,3 +2,6 @@
 *.req
 *.crt
 *.key
+*.conf
+
+data/

@@ -46,7 +46,7 @@ services:
     container_name: mongo
     restart: always
     hostname: mongodb
-    command: mongod --auth
+    command: mongod --auth --smallfiles --nojournal
     ports:
       - 27017:27017
     environment:
@@ -56,7 +56,7 @@ services:
     volumes:
       - ${VOLUME_PREFIX}/mongo:/data/db
     labels:
-      - traefik.tcp.routers.mongo.rule=HostSNI(`mongo.tosone.cn`)
+      - traefik.tcp.routers.mongo.rule=HostSNI(`mongo${HOST_DOMAIN}`)
   mysql:
     image: mysql:8
     container_name: mysql
@@ -72,7 +72,7 @@ services:
     ports:
       - 3306:3306
     labels:
-      - traefik.tcp.routers.mysql.rule=HostSNI(`mysql.tosone.cn`)
+      - traefik.tcp.routers.mysql.rule=HostSNI(`mysql${HOST_DOMAIN}`)
   redis:
     image: redis:alpine
     container_name: redis
@@ -84,7 +84,7 @@ services:
     ports:
       - 6379:6379
     labels:
-      - traefik.tcp.routers.redis.rule=HostSNI(`redis.tosone.cn`)
+      - traefik.tcp.routers.redis.rule=HostSNI(`redis${HOST_DOMAIN}`)
   postgres:
     image: postgres:alpine
     container_name: postgres
@@ -111,7 +111,7 @@ services:
         "ssl_key_file=/var/lib/postgresql/server.key",
       ]
     labels:
-      - traefik.tcp.routers.postgres.rule=HostSNI(`postgres.tosone.cn`)
+      - traefik.tcp.routers.postgres.rule=HostSNI(`postgres${HOST_DOMAIN}`)
   influxdb:
     image: influxdb:alpine
     container_name: influxdb
@@ -138,7 +138,7 @@ services:
       - traefik.http.routers.influxdb.tls.certresolver=leresolver
       - traefik.http.services=influxdb
       - traefik.http.services.influxdb.loadbalancer.server.port=8086
-      - traefik.tcp.routers.influxdb.rule=HostSNI(`influxdb.tosone.cn`)
+      - traefik.tcp.routers.influxdb.rule=HostSNI(`influxdb${HOST_DOMAIN}`)
   chronograf:
     image: chronograf:alpine
     container_name: chronograf
@@ -165,7 +165,7 @@ services:
     restart: always
     network_mode: host
     labels:
-      - traefik.tcp.routers.frps.rule=HostSNI(`frps.tosone.cn`)
+      - traefik.tcp.routers.frps.rule=HostSNI(`frps${HOST_DOMAIN}`)
   frpc:
     image: docker-tutorial:frpc
     build:
@@ -210,7 +210,7 @@ services:
     ports:
       - ${SHADOWSOCKS_PORT}:${SHADOWSOCKS_PORT}
     labels:
-      - traefik.tcp.routers.ssproxy.rule=HostSNI(`ss.tosone.cn`)
+      - traefik.tcp.routers.ssproxy.rule=HostSNI(`ss${HOST_DOMAIN}`)
   shadowsocks:
     image: shadowsocks/shadowsocks-libev:latest
     container_name: shadowsocks

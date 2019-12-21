@@ -8,5 +8,3 @@ services:
     image: alpine-buildpack:dev
     restart: always
     tty: true
-    volumes:
-      - $HOME/gocode/src:/root/go/src

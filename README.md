@@ -1,5 +1,13 @@
 # Docker Tutorial
 
+### Try shadowsocks demo
+
+Make a shadowsocks server in 30 seconds. Test it on Debian buster.
+
+[![asciicast](https://asciinema.org/a/WaGjxoVTRdlyUIkG6BlFRiBWz.svg)](https://asciinema.org/a/WaGjxoVTRdlyUIkG6BlFRiBWz)
+
+After that you can connect this server with `ss://chacha20-ietf-poly1305:123456@192.168.100.1:3600`. 
+
 ### Service
 
 |Application|ContianerPort|Port|Domain|Database|Admin|Password|
@@ -14,12 +22,3 @@
 |influxdb|8086|443|influxdb.tosone.cn|database|tosone|secret|
 |influxdb|2003|2003|influxdb.tosone.cn|-|-|-|
 |frps|9000|9000-10000|frp.tosone.cn|-|-|-|
-
-
-### Try a demo
-
-Make a shadowsock server in 30 seconds. Test it on Debian buster.
-
-[![asciicast](https://asciinema.org/a/WaGjxoVTRdlyUIkG6BlFRiBWz.svg)](https://asciinema.org/a/WaGjxoVTRdlyUIkG6BlFRiBWz)
-
-After that you can connect this server with `ss://chacha20-ietf-poly1305:123456@192.168.100.1:3600`. 

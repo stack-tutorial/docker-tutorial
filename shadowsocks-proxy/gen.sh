@@ -5,7 +5,7 @@ stream {
 	upstream group {
 EOF
 
-for i in $SHADOWSOCKS_SERVER; do
+for i in ${SHADOWSOCKS_SERVER//\"}; do
 cat << EOF
 		server $i:$SHADOWSOCKS_PORT;
 EOF
