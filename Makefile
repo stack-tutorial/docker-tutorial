@@ -5,7 +5,7 @@ export COMPOSE_IGNORE_ORPHANS=True # ignore others container
 
 compose_version = 1.25.0
 
-all = gitea gogs mongo redis mysql influxdb filebrowser
+all = gitea gogs mongo redis mysql influxdb filebrowser jupyter
 
 run: ensure-dir traefik frps frpc postgres $(all)
 
