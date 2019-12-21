@@ -5,17 +5,17 @@ stream {
 	upstream group {
 EOF
 
-for i in ${SHADOWSOCKS_SERVER//\"}; do
+for i in `echo ${SHADOWSOCKS_SERVER} | sed 's/"//g'`; do
 cat << EOF
-		server $i:$SHADOWSOCKS_PORT;
+		server $i:${SHADOWSOCKS_PORT};
 EOF
 done
 
 cat << EOF
 	}
 	server {
-		listen $SHADOWSOCKS_PORT;
-		listen $SHADOWSOCKS_PORT udp;
+		listen ${SHADOWSOCKS_PORT};
+		listen ${SHADOWSOCKS_PORT} udp;
 		proxy_pass group;
 	}
 }

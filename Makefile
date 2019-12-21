@@ -5,7 +5,7 @@ export COMPOSE_IGNORE_ORPHANS=True # ignore others container
 
 compose_version = 1.25.0
 
-all = gitea gogs mongo redis mysql influxdb
+all = gitea gogs mongo redis mysql influxdb filebrowser
 
 run: ensure-dir traefik frps frpc postgres $(all)
 
@@ -21,8 +21,8 @@ install-docker:
 ensure-dir:
 	$(foreach dir, $(all), $(shell if [ ! -d $(VOLUME_PREFIX)/$(dir) ]; then mkdir -p $(VOLUME_PREFIX)/$(dir); fi))
 
-.PHONY: $(all) frps frpc netdata shadowsocks
-$(all) frps frpc netdata shadowsocks:
+.PHONY: $(all) frps frpc netdata shadowsocks httpbin
+$(all) frps frpc netdata shadowsocks httpbin:
 	docker-compose up --force-recreate -d $@
 
 .PHONY: shadowsocks-proxy
@@ -32,18 +32,18 @@ shadowsocks-proxy:
 	$(RM) $@/modules-enabled/shadowsocks.conf
 
 .PHONY: postgres
-postgres:
+postgres: ensure-dir
 	cd $@ && sh gen.sh
 	if [ ! -d $(VOLUME_PREFIX)/$@ ]; then mkdir -p $(VOLUME_PREFIX)/$@; fi
-	if [ ! -d ${VOLUME_PREFIX}/key ]; then sudo mkdir -p ${VOLUME_PREFIX}/key; fi
+	if [ ! -d ${VOLUME_PREFIX}/key ]; then mkdir -p ${VOLUME_PREFIX}/key; fi
 	sudo cp -r $@ ${VOLUME_PREFIX}/key
-	sudo chmod 640 ${VOLUME_PREFIX}/key/$@/server.key && sudo chown 0:70 ${VOLUME_PREFIX}/key/$@/server.key
+	cd ${VOLUME_PREFIX}/key/$@ && sudo chmod 640 server.key && sudo chown 0:70 server.key
 	docker-compose up --force-recreate -d $@
 
 .PHONY: traefik
 traefik:
 	if [ ! -d $(VOLUME_PREFIX)/$@ ]; then mkdir -p $(VOLUME_PREFIX)/$@; fi
-	touch $(VOLUME_PREFIX)/$@/acme.json
+	if [ ! -f $(VOLUME_PREFIX)/$@/acme.json ]; then touch $(VOLUME_PREFIX)/$@/acme.json; fi
 	sudo chmod 600 $(VOLUME_PREFIX)/$@/acme.json
 	docker-compose -f docker-compose-$@.yml up --force-recreate -d $@
 

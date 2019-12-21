@@ -14,6 +14,7 @@ After that you can connect this server with `ss://chacha20-ietf-poly1305:123456@
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |gitea|3000|443|git.tosone.cn|-|-|-|
 |gogs|3000|443|gogs.tosone.cn|-|-|-|
+|httpbin|80|443|httpbin.tosone.cn|-|-|-|
 |netdata|19999|443|netdata.tosone.cn|-|-|-|
 |mongo|27017|27017|mongo.tosone.cn|database|tosone|secret|
 |mysql|3306|3306|mysql.tosone.cn|database|tosone|secret|
