@@ -76,7 +76,7 @@ services:
     container_name: mongo
     restart: always
     hostname: mongodb
-    command: mongod --auth --smallfiles --nojournal
+    command: mongod --auth --nojournal
     ports:
       - 27017:27017
     environment:
