@@ -21,8 +21,8 @@ install-docker:
 ensure-dir:
 	$(foreach dir, $(all), $(shell if [ ! -d $(VOLUME_PREFIX)/$(dir) ]; then mkdir -p $(VOLUME_PREFIX)/$(dir); fi))
 
-.PHONY: $(all) frps frpc netdata shadowsocks httpbin
-$(all) frps frpc netdata shadowsocks httpbin:
+.PHONY: $(all) frps frpc netdata shadowsocks httpbin squid
+$(all) frps frpc netdata shadowsocks httpbin proxy phpmyadmin:
 	docker-compose up --force-recreate -d $@
 
 .PHONY: shadowsocks-proxy

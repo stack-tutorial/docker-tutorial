@@ -7,6 +7,7 @@ services:
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
+      - --entrypoints.mysql.address=:3306
       - --providers.docker
       - --api
       - --certificatesresolvers.leresolver.acme.email=i@tosone.cn
@@ -19,18 +20,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${VOLUME_PREFIX}/traefik/acme.json:/acme.json
     labels:
-      - "traefik.http.routers.traefik.rule=Host(`traefik${HOST_DOMAIN}`)"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.tls.certresolver=leresolver"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.middlewares=authtraefik"
-      - "traefik.http.middlewares.authtraefik.basicauth.users=tosone:$$apr1$$2DvxBXHm$$7iRM18fGqs30h2r0gDZK0/"
-
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.http-catchall.entrypoints=web"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - traefik.http.routers.traefik.rule=Host(`traefik${HOST_DOMAIN}`)
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.tls.certresolver=leresolver
+      - traefik.http.routers.traefik.entrypoints=websecure
+      - traefik.http.routers.traefik.middlewares=authtraefik
+      - traefik.http.middlewares.authtraefik.basicauth.users=tosone:$$apr1$$2DvxBXHm$$7iRM18fGqs30h2r0gDZK0/
+      - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
+      - traefik.http.routers.http-catchall.entrypoints=web
+      - traefik.http.routers.http-catchall.middlewares=redirect-to-https
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
 networks:
   default:
     external:
