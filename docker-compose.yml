@@ -61,15 +61,14 @@ services:
     hostname: proxy
     restart: always
     build: $PWD/forword-proxy
-    networks:
-      - default
-    ports:
-      - 3128:3128
     environment:
       - USERNAME=${USERNAME}
       - PASSWORD=${SECRETPERSONAL}
     labels:
-      - traefik.enable=false
+      - traefik.tcp.routers.proxy.rule=HostSNI(`*`)
+      - traefik.tcp.routers.proxy.entrypoints=proxy
+      - traefik.tcp.routers.proxy.service=proxy-svc
+      - traefik.tcp.services.proxy-svc.loadbalancer.server.port=3128
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
@@ -113,7 +112,7 @@ services:
     networks:
       - default
     volumes:
-      - ${VOLUME_PREFIX}/jupyter:/home/jovyan/work
+      - ${VOLUME_PREFIX}/jupyter:/home/jovyan
     labels:
       - traefik.http.routers.jupyter.rule=Host(`jupyter${HOST_DOMAIN}`)
       - traefik.http.routers.jupyter.entrypoints=websecure
