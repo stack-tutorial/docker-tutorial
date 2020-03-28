@@ -1,0 +1,30 @@
+version: "3"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
+    container_name: elasticsearch
+    hostname: elasticsearch
+    restart: always
+    volumes:
+      - ${VOLUME_PREFIX}/elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - default
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.6.1
+    container_name: kibana
+    hostname: kibana
+    restart: always
+    networks:
+      - default
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+networks:
+  default:
+    external:
+      name: ${DOCKER_NETWORK:-webproxy}

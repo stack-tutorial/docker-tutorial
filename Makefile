@@ -47,6 +47,18 @@ traefik:
 	sudo chmod 600 $(VOLUME_PREFIX)/$@/acme.json
 	docker-compose -f docker-compose-$@.yml up --force-recreate -d $@
 
+.PHONY: etcd
+etcd:
+	$(shell if [ ! -d $(VOLUME_PREFIX)/etcd/etcd1 ]; then mkdir -p $(VOLUME_PREFIX)/etcd/etcd1; fi)
+	$(shell if [ ! -d $(VOLUME_PREFIX)/etcd/etcd2 ]; then mkdir -p $(VOLUME_PREFIX)/etcd/etcd2; fi)
+	$(shell if [ ! -d $(VOLUME_PREFIX)/etcd/etcd3 ]; then mkdir -p $(VOLUME_PREFIX)/etcd/etcd3; fi)
+	cd $@ && docker-compose up --force-recreate -d
+
+.PHONY: elastic
+elastic:
+	$(shell if [ ! -d $(VOLUME_PREFIX)/elasticsearch ]; then mkdir -p $(VOLUME_PREFIX)/elasticsearch; fi)
+	cd $@ && docker-compose up --force-recreate -d
+
 .PHONY: upgrade
 upgrade:
 	docker-compose pull $(all)
