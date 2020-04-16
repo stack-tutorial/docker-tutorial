@@ -1,7 +1,4 @@
-app_name                := alpine-buildpack
-docker_name             := $(app_name)
-docker_tag              := dev
-docker_container        := $(app_name)
+app_name = alpine-buildpack
 
 .PHONY: upgrade
 upgrade:
@@ -9,7 +6,7 @@ upgrade:
 
 .PHONY: build
 build:
-	docker-compose build $(docker_name)
+	docker-compose build $(app_name)
 
 .PHONY: run
 run:
@@ -17,8 +14,8 @@ run:
 
 .PHONY: exec
 exec:
-	docker-compose exec -it $(docker_container)
+	docker-compose exec -it $(app_name)
 
 .PHONY: exec-now
 exec-now:
-	docker-compose run --rm $(docker_container)
+	docker-compose run --rm $(app_name)
