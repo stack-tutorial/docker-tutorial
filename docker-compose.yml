@@ -137,7 +137,7 @@ services:
     labels:
       - traefik.tcp.routers.mongo.rule=HostSNI(`mongo${HOST_DOMAIN}`)
   mysql:
-    image: mysql:8
+    image: mysql:5
     container_name: mysql
     restart: always
     hostname: mysql

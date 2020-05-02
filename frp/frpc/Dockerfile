@@ -2,7 +2,7 @@ FROM alpine:edge
 
 LABEL maintainer="i@tosone.cn"
 
-ARG FRP_VERSION=v0.31.2
+ARG FRP_VERSION=v0.33.0
 
 RUN sed -i 's/http:\/\/dl-cdn.alpinelinux.org/https:\/\/mirrors.aliyun.com/g' /etc/apk/repositories 
 
