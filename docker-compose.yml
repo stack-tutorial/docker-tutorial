@@ -5,8 +5,6 @@ services:
     image: gitea/gitea:1.11
     container_name: gitea
     hostname: gitea
-    ports:
-      - 22:22/tcp
     environment:
       - USER_UID=1000
       - USER_GID=1000
@@ -22,6 +20,10 @@ services:
       - traefik.http.routers.gitea.tls.certresolver=leresolver
       - traefik.http.services=gitea
       - traefik.http.services.gitea.loadbalancer.server.port=3000
+      - traefik.tcp.routers.ssh.rule=HostSNI(`*`)
+      - traefik.tcp.routers.ssh.entrypoints=ssh
+      - traefik.tcp.routers.ssh.service=ssh-svc
+      - traefik.tcp.services.ssh-svc.loadbalancer.server.port=22
   gogs:
     image: gogs/gogs:latest
     container_name: gogs
@@ -126,8 +128,6 @@ services:
     restart: always
     hostname: mongodb
     command: mongod --auth --nojournal
-    ports:
-      - 27017:27017
     environment:
       - MONGO_INITDB_DATABASE=${DATABASE_NAME}
       - MONGO_INITDB_ROOT_USERNAME=${USERNAME}
@@ -135,7 +135,10 @@ services:
     volumes:
       - ${VOLUME_PREFIX}/mongo:/data/db
     labels:
-      - traefik.tcp.routers.mongo.rule=HostSNI(`mongo${HOST_DOMAIN}`)
+      - traefik.tcp.routers.mongo.rule=HostSNI(`*`)
+      - traefik.tcp.routers.mongo.entrypoints=mongo
+      - traefik.tcp.routers.mongo.service=mongo-svc
+      - traefik.tcp.services.mongo-svc.loadbalancer.server.port=27017
   mysql:
     image: mysql:5
     container_name: mysql
@@ -161,10 +164,11 @@ services:
     command: redis-server --requirepass ${SECRETPERSONAL}
     volumes:
       - ${VOLUME_PREFIX}/redis:/data
-    ports:
-      - 6379:6379
     labels:
-      - traefik.tcp.routers.redis.rule=HostSNI(`redis${HOST_DOMAIN}`)
+      - traefik.tcp.routers.redis.rule=HostSNI(`*`)
+      - traefik.tcp.routers.redis.entrypoints=redis
+      - traefik.tcp.routers.redis.service=redis-svc
+      - traefik.tcp.services.redis-svc.loadbalancer.server.port=6379
   postgres:
     image: postgres:alpine
     container_name: postgres
@@ -174,8 +178,6 @@ services:
       - POSTGRES_USER=${USERNAME}
       - POSTGRES_PASSWORD=${SECRETPERSONAL}
       - POSTGRES_DB=${DATABASE_NAME}
-    ports:
-      - 5432:5432
     volumes:
       - ${VOLUME_PREFIX}/postgres:/var/lib/postgresql/data
       - ${VOLUME_PREFIX}/key/postgres/server.crt:/var/lib/postgresql/server.crt:ro
@@ -191,7 +193,10 @@ services:
         "ssl_key_file=/var/lib/postgresql/server.key",
       ]
     labels:
-      - traefik.tcp.routers.postgres.rule=HostSNI(`postgres${HOST_DOMAIN}`)
+      - traefik.tcp.routers.postgres.rule=HostSNI(`*`)
+      - traefik.tcp.routers.postgres.entrypoints=postgres
+      - traefik.tcp.routers.postgres.service=postgres-svc
+      - traefik.tcp.services.postgres-svc.loadbalancer.server.port=5432
   influxdb:
     image: influxdb:alpine
     container_name: influxdb
@@ -205,8 +210,6 @@ services:
       - INFLUXDB_USER=${USERNAME}-user
       - INFLUXDB_USER_PASSWORD=${SECRETPERSONAL}
       - INFLUXDB_DB=${DATABASE_NAME}
-    ports:
-      - 2003:2003
     volumes:
       - ${VOLUME_PREFIX}/influxdb:/var/lib/influxdb
     networks:
@@ -219,6 +222,10 @@ services:
       - traefik.http.services=influxdb
       - traefik.http.services.influxdb.loadbalancer.server.port=8086
       - traefik.tcp.routers.influxdb.rule=HostSNI(`influxdb${HOST_DOMAIN}`)
+      - traefik.tcp.routers.influxdb.rule=HostSNI(`*`)
+      - traefik.tcp.routers.influxdb.entrypoints=influxdb
+      - traefik.tcp.routers.influxdb.service=influxdb-svc
+      - traefik.tcp.services.influxdb-svc.loadbalancer.server.port=2003
   chronograf:
     image: chronograf:alpine
     container_name: chronograf

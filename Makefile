@@ -3,14 +3,14 @@ export $(shell sed 's/=.*//' .env)
 
 export COMPOSE_IGNORE_ORPHANS=True # ignore others container
 
-compose_version = 1.25.0
+compose_version = 1.25.5
 
 all = gitea gogs mongo redis mysql influxdb filebrowser jupyter
 
 run: ensure-dir traefik frps frpc postgres $(all)
 
-.PHONY: install-docker
-install-docker:
+.PHONY: install
+install:
 	curl -fsSL https://get.docker.com | sh
 	sudo usermod -aG docker $(USER)
 	sudo curl -L https://github.com/docker/compose/releases/download/$(compose_version)/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose
@@ -63,3 +63,8 @@ elastic:
 upgrade:
 	docker-compose pull $(all)
 	docker-compose -f docker-compose-traefik.yml pull traefik
+
+.PHONY: stop
+stop:
+	docker-compose stop $(all)
+	docker-compose -f docker-compose-traefik.yml stop traefik

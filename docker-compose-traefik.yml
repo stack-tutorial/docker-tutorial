@@ -6,8 +6,12 @@ services:
     container_name: traefik
     command:
       - --entrypoints.web.address=:80
+      - --entrypoints.ssh.address=:22
       - --entrypoints.websecure.address=:443
-      - --entrypoints.mysql.address=:3306
+      - --entrypoints.influxdb.address=:2003
+      - --entrypoints.mongo.address=:3306
+      - --entrypoints.postgres.address=:5432
+      - --entrypoints.redis.address=:6379
       - --providers.docker
       - --api
       - --certificatesresolvers.leresolver.acme.email=i@tosone.cn
@@ -15,8 +19,12 @@ services:
       - --certificatesresolvers.leresolver.acme.caserver=${LETSENCRYPT_CASERVER}
     ports:
       - 80:80
+      - 22:22/tcp
       - 443:443
+      - 2003:2003
       - 3306:3306
+      - 5432:5432
+      - 6379:6379
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${VOLUME_PREFIX}/traefik/acme.json:/acme.json
