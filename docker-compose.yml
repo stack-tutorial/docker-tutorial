@@ -140,7 +140,7 @@ services:
       - traefik.tcp.routers.mongo.service=mongo-svc
       - traefik.tcp.services.mongo-svc.loadbalancer.server.port=27017
   mysql:
-    image: mysql:5
+    image: mysql:8
     container_name: mysql
     restart: always
     hostname: mysql

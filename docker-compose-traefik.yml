@@ -9,12 +9,13 @@ services:
       - --entrypoints.ssh.address=:22
       - --entrypoints.websecure.address=:443
       - --entrypoints.influxdb.address=:2003
-      - --entrypoints.mongo.address=:3306
+      - --entrypoints.mysql.address=:3306
       - --entrypoints.postgres.address=:5432
       - --entrypoints.redis.address=:6379
+      - --entrypoints.mongo.address=:27017
       - --providers.docker
       - --api
-      - --certificatesresolvers.leresolver.acme.email=i@tosone.cn
+      - --certificatesresolvers.leresolver.acme.email=${LETSENCRYPT_EMAIL}
       - --certificatesresolvers.leresolver.acme.tlschallenge=true
       - --certificatesresolvers.leresolver.acme.caserver=${LETSENCRYPT_CASERVER}
     ports:
@@ -25,6 +26,7 @@ services:
       - 3306:3306
       - 5432:5432
       - 6379:6379
+      - 27017:27017
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${VOLUME_PREFIX}/traefik/acme.json:/acme.json
