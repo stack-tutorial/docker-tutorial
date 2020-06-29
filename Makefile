@@ -13,8 +13,16 @@ run: ensure-dir traefik frps frpc postgres $(all)
 install:
 	curl -fsSL https://get.docker.com | sh
 	sudo usermod -aG docker $(USER)
+	$(MAKE) install-docker-compose
+	$(MAKE) docker-network
+
+.PHONY: install-docker-compose
+install-docker-compose:
 	sudo curl -L https://github.com/docker/compose/releases/download/$(compose_version)/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose
 	sudo chmod +x /usr/bin/docker-compose
+
+.PHONY: docker-network
+docker-network:
 	docker network create $(DOCKER_NETWORK)
 
 .PHONY: ensure-dir
