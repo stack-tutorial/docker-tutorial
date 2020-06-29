@@ -1,12 +1,11 @@
 FROM alpine:edge
 
-LABEL maintainer="i@tosone.cn"
+LABEL maintainer="Tosone <i@tosone.cn>"
 
-ARG FRP_VERSION=v0.33.0
+ARG FRP_VERSION=0.33.0
 
-RUN sed -i 's/http:\/\/dl-cdn.alpinelinux.org/https:\/\/mirrors.aliyun.com/g' /etc/apk/repositories 
-
-RUN apk add --no-cache pcre bash ca-certificates && \
+RUN sed -i 's/https:\/\/dl-cdn.alpinelinux.org/https:\/\/mirrors.aliyun.com/g' /etc/apk/repositories && \
+  apk add --no-cache pcre bash ca-certificates && \
   apk add --no-cache --virtual .build-deps wget tar && \
   wget https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz && \
   tar zxvf frp_${FRP_VERSION}_linux_amd64.tar.gz && \
