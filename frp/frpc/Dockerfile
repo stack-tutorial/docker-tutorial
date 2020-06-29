@@ -13,7 +13,7 @@ RUN sed -i 's/https:\/\/dl-cdn.alpinelinux.org/https:\/\/mirrors.aliyun.com/g' /
   apk del .build-deps && \
   rm -rf frp_${FRP_VERSION}_linux_amd64.tar.gz frp_${FRP_VERSION}_linux_amd64
 
-VOLUME /app
+WORKDIR /app
 
 ADD frpc.ini .
 

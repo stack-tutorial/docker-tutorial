@@ -252,7 +252,7 @@ services:
     restart: always
     network_mode: host
     labels:
-      - traefik.tcp.routers.frps.rule=HostSNI(`frps${HOST_DOMAIN}`)
+      - traefik.enable=false
   frpc:
     image: docker-tutorial:frpc
     build:
@@ -262,8 +262,6 @@ services:
     hostname: frpc
     restart: always
     network_mode: host
-    volumes:
-      - ./frp/frpc/frpc.ini:/app/frpc.ini
     labels:
       - traefik.enable=false
   netdata:
