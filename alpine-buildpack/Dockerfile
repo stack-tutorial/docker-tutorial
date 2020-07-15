@@ -2,8 +2,8 @@ FROM alpine:edge
 
 LABEL maintainer="Tosone <i@tosone.cn>"
 
-RUN sed -i "s/http:\/\/dl-cdn.alpinelinux.org/https:\/\/mirrors.aliyun.com/g" /etc/apk/repositories && \
-  apk add --no-cache build-base mdocml-apropos \
+RUN sed -i "s/https:\/\/dl-cdn.alpinelinux.org/https:\/\/mirrors.aliyun.com/g" /etc/apk/repositories && \
+  apk add --no-cache build-base \
   coreutils ca-certificates autoconf automake libtool cmake \
   bc tree vim git fish dialog less tzdata && \
   sed -i "s/bin\/ash/usr\/bin\/fish/" /etc/passwd && \

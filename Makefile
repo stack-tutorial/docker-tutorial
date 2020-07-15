@@ -3,9 +3,9 @@ export $(shell sed 's/=.*//' .env)
 
 export COMPOSE_IGNORE_ORPHANS=True # ignore others container
 
-compose_version = 1.26.0
+compose_version = 1.26.2
 
-all = gitea gogs mongo redis mysql influxdb filebrowser jupyter
+all = gitea gogs mongo redis mysql influxdb filebrowser jupyter portainer
 
 run: ensure-dir traefik frps frpc postgres $(all)
 

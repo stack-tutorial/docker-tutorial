@@ -71,6 +71,24 @@ services:
       - traefik.tcp.routers.proxy.entrypoints=proxy
       - traefik.tcp.routers.proxy.service=proxy-svc
       - traefik.tcp.services.proxy-svc.loadbalancer.server.port=3128
+  portainer:
+    image: portainer/portainer:1.24.0-alpine
+    container_name: portainer
+    hostname: portainer
+    restart: always
+    command: -H unix:///var/run/docker.sock --admin-password $$2y$$05$$j4PJecT5XZtKH1NxK.2Jge/Rtv4x/Nfdd6qfrCOua0ledkZrlFZDq
+    volumes:
+      - ${VOLUME_PREFIX}/portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - default
+    labels:
+      - traefik.http.routers.portainer.rule=Host(`portainer${HOST_DOMAIN}`)
+      - traefik.http.routers.portainer.entrypoints=websecure
+      - traefik.http.routers.portainer.tls=true
+      - traefik.http.routers.portainer.tls.certresolver=leresolver
+      - traefik.http.services=portainer
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin

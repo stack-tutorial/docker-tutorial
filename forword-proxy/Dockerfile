@@ -1,6 +1,6 @@
 FROM debian:buster
 
-LABEL maintainer="i@tosone.cn"
+LABEL maintainer="Tosone <i@tosone.cn>"
 
 WORKDIR /app
 
