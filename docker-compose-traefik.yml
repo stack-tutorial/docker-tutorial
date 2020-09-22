@@ -2,8 +2,10 @@ version: "3.8"
 
 services:
   traefik:
-    image: traefik:v2.2
+    image: traefik:v2.3
     container_name: traefik
+    hostname: traefik
+    restart: always
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.ssh.address=:22
