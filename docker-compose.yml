@@ -43,6 +43,49 @@ services:
       - traefik.http.routers.gogs.tls.certresolver=leresolver
       - traefik.http.services=gogs
       - traefik.http.services.gogs.loadbalancer.server.port=3000
+  drone-server:
+    image: drone/drone:1
+    container_name: drone-server
+    hostname: drone-server
+    environment:
+      - DRONE_GITEA_SERVER=git${HOST_DOMAIN}
+      - DRONE_GITEA_CLIENT_ID=${DRONE_GITEA_CLIENT_ID}
+      - DRONE_GITEA_CLIENT_SECRET=${DRONE_GITEA_CLIENT_SECRET}
+      - DRONE_RPC_SECRET=${SECRETPERSONAL}
+      - DRONE_SERVER_HOST=drone${HOST_DOMAIN}
+      - DRONE_SERVER_PROTO=http
+    restart: always
+    volumes:
+      - ${VOLUME_PREFIX}/drone:/data
+    labels:
+      - traefik.http.routers.drone.rule=Host(`drone${HOST_DOMAIN}`)
+      - traefik.http.routers.drone.entrypoints=websecure
+      - traefik.http.routers.drone.tls=true
+      - traefik.http.routers.drone.tls.certresolver=leresolver
+      - traefik.http.services=drone
+      - traefik.http.services.drone.loadbalancer.server.port=80
+  drone-runner:
+    image: drone/drone-runner-docker:1
+    container_name: drone-runner
+    hostname: drone-runner
+    environment:
+      - DRONE_RPC_PROTO=http
+      - DRONE_RPC_HOST=drone${HOST_DOMAIN}
+      - DRONE_RPC_SECRET=${SECRETPERSONAL}
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_RUNNER_NAME=drone-runner
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - traefik.http.routers.drone.rule=Host(`drone${HOST_DOMAIN}`)
+      - traefik.http.routers.drone.entrypoints=websecure
+      - traefik.http.routers.drone.tls=true
+      - traefik.http.routers.drone.tls.certresolver=leresolver
+      - traefik.http.services=drone
+      - traefik.http.services.drone.loadbalancer.server.port=80
   httpbin:
     image: kennethreitz/httpbin:latest
     container_name: httpbin
