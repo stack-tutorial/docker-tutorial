@@ -48,12 +48,12 @@ services:
     container_name: drone-server
     hostname: drone-server
     environment:
-      - DRONE_GITEA_SERVER=git${HOST_DOMAIN}
+      - DRONE_GITEA_SERVER=https://git${HOST_DOMAIN}
       - DRONE_GITEA_CLIENT_ID=${DRONE_GITEA_CLIENT_ID}
       - DRONE_GITEA_CLIENT_SECRET=${DRONE_GITEA_CLIENT_SECRET}
       - DRONE_RPC_SECRET=${SECRETPERSONAL}
       - DRONE_SERVER_HOST=drone${HOST_DOMAIN}
-      - DRONE_SERVER_PROTO=http
+      - DRONE_SERVER_PROTO=https
     restart: always
     volumes:
       - ${VOLUME_PREFIX}/drone:/data
@@ -69,7 +69,7 @@ services:
     container_name: drone-runner
     hostname: drone-runner
     environment:
-      - DRONE_RPC_PROTO=http
+      - DRONE_RPC_PROTO=https
       - DRONE_RPC_HOST=drone${HOST_DOMAIN}
       - DRONE_RPC_SECRET=${SECRETPERSONAL}
       - DRONE_RUNNER_CAPACITY=2
@@ -80,12 +80,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
-      - traefik.http.routers.drone.rule=Host(`drone${HOST_DOMAIN}`)
-      - traefik.http.routers.drone.entrypoints=websecure
-      - traefik.http.routers.drone.tls=true
-      - traefik.http.routers.drone.tls.certresolver=leresolver
-      - traefik.http.services=drone
-      - traefik.http.services.drone.loadbalancer.server.port=80
+      - traefik.enable=false
   httpbin:
     image: kennethreitz/httpbin:latest
     container_name: httpbin
@@ -115,7 +110,7 @@ services:
       - traefik.tcp.routers.proxy.service=proxy-svc
       - traefik.tcp.services.proxy-svc.loadbalancer.server.port=3128
   portainer:
-    image: portainer/portainer:1.24.1-alpine
+    image: portainer/portainer:alpine
     container_name: portainer
     hostname: portainer
     restart: always
