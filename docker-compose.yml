@@ -127,6 +127,16 @@ services:
       - traefik.http.routers.portainer.tls.certresolver=leresolver
       - traefik.http.services=portainer
       - traefik.http.services.portainer.loadbalancer.server.port=9000
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    hostname: watchtower
+    restart: always
+    command: redis traefik mongo drone-server drone-runner httpbin portainer phpmyadmin filebrowser jupyter mysql postgres influxdb chronograf netdata gitea gogs --interval 3600 --cleanup
+    networks:
+      - default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
