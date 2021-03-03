@@ -1,8 +1,8 @@
-version: "3.8"
+version: "3.9"
 
 services:
   traefik:
-    image: traefik:v2.3
+    image: traefik:v2.4
     container_name: traefik
     hostname: traefik
     restart: always
