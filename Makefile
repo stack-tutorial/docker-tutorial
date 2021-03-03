@@ -5,7 +5,8 @@ export COMPOSE_IGNORE_ORPHANS=True # ignore others container
 
 compose_version = 1.28.5
 
-all = gitea gogs mongo redis mysql influxdb filebrowser jupyter portainer
+all    = gitea gogs mongo redis mysql influxdb filebrowser jupyter portainer
+others = frps frpc netdata shadowsocks httpbin proxy phpmyadmin
 
 run: ensure-dir traefik frps frpc postgres $(all)
 
@@ -29,8 +30,8 @@ docker-network:
 ensure-dir:
 	$(foreach dir, $(all), $(shell if [ ! -d $(VOLUME_PREFIX)/$(dir) ]; then mkdir -p $(VOLUME_PREFIX)/$(dir); fi))
 
-.PHONY: $(all) frps frpc netdata shadowsocks httpbin squid
-$(all) frps frpc netdata shadowsocks httpbin proxy phpmyadmin:
+.PHONY: $(all) $(others)
+$(all) $(others):
 	docker-compose up --force-recreate -d $@
 
 .PHONY: shadowsocks-proxy
@@ -74,5 +75,7 @@ upgrade:
 
 .PHONY: stop
 stop:
-	docker-compose stop $(all)
+	docker-compose stop $(all) $(others) shadowsocks-proxy postgres
+	cd etcd && docker-compose stop
+	cd elastic && docker-compose stop
 	docker-compose -f docker-compose-traefik.yml stop traefik
