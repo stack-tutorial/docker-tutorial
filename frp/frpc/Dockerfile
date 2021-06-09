@@ -2,7 +2,7 @@ FROM alpine:edge
 
 LABEL maintainer="Tosone <i@tosone.cn>"
 
-ARG FRP_VERSION=0.34.1
+ARG FRP_VERSION=0.37.0
 
 RUN sed -i 's/https:\/\/dl-cdn.alpinelinux.org/https:\/\/mirrors.aliyun.com/g' /etc/apk/repositories && \
   apk add --no-cache pcre bash ca-certificates && \
