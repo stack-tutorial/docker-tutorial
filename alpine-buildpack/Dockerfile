@@ -2,13 +2,14 @@ FROM alpine:edge
 
 LABEL maintainer="Tosone <i@tosone.cn>"
 
-RUN sed -i "s/https:\/\/dl-cdn.alpinelinux.org/https:\/\/mirrors.aliyun.com/g" /etc/apk/repositories && \
-  apk add --no-cache build-base \
-  coreutils ca-certificates autoconf automake libtool cmake \
-  bc tree vim git fish dialog less tzdata && \
-  sed -i "s/bin\/ash/usr\/bin\/fish/" /etc/passwd && \
+RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories && \
+  apk add --no-cache bash build-base \
+  coreutils ca-certificates autoconf automake libtool cmake curl \
+  tree vim git dialog less tzdata ncurses bind-tools && \
   rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
-ENV SHELL /usr/bin/fish
+COPY .bashrc /root
 
-CMD /usr/bin/fish
+WORKDIR /app
+
+CMD /usr/bash
